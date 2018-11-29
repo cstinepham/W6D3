@@ -108,7 +108,21 @@ const APIUtil = {
       url: `/users/${id}/follow`,
       dataType: "JSON"
     });
+  },
+
+  searchUsers: (queryVal, success) => {
+    return $.ajax({
+      method: "GET",
+      url: "/users/search",
+      dataType: "JSON",
+      data: {query:queryVal},
+      success: success
+    });
   }
+
+
+
+
 };
 
 module.exports = APIUtil;
@@ -140,9 +154,11 @@ class FollowToggle {
     } else if (this.followState) {
       this.$el.text("Unfollow!");
     }
+    this.$el.prop("disabled", false);
   }
 
   handleClick(e) {
+    this.$el.prop("disabled", true);
     e.preventDefault();
     let ajaxPromise = null;
     if(!this.followState) {
@@ -176,10 +192,47 @@ module.exports = FollowToggle;
 /***/ (function(module, exports, __webpack_require__) {
 
 const FollowToggle = __webpack_require__(/*! ./follow_toggle.js */ "./frontend/follow_toggle.js");
+const UsersSearch = __webpack_require__(/*! ./users_search.js */ "./frontend/users_search.js");
 
 $(() => {
   $("button.follow-toggle").each((idx, el) => new FollowToggle($(el)));
+  $(".users-search").each((idx, el) => new UsersSearch($(el)));
+
 });
+
+
+/***/ }),
+
+/***/ "./frontend/users_search.js":
+/*!**********************************!*\
+  !*** ./frontend/users_search.js ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const APIUtil = __webpack_require__(/*! ./api_util.js */ "./frontend/api_util.js");
+
+class UsersSearch {
+  constructor($el) {
+    this.$el = $el;
+    this.$input = $el.find("input");
+    this.$ul = $el.find(".users");
+    this.$input.on("input", this.handleInput.bind(this));
+  }
+
+  handleInput(e) {
+    APIUtil.searchUsers(this.$input.val(), this.renderResults.bind(this));
+  }
+
+  renderResults(users) {
+    this.$ul.empty();
+    $(users).each((idx, el) => {
+      this.$ul.append(`<li><a href="/users/${el.id}">${el.username}</a></li>`);
+    });
+  }
+}
+
+module.exports = UsersSearch;
 
 
 /***/ })

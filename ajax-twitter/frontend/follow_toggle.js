@@ -15,9 +15,11 @@ class FollowToggle {
     } else if (this.followState) {
       this.$el.text("Unfollow!");
     }
+    this.$el.prop("disabled", false);
   }
 
   handleClick(e) {
+    this.$el.prop("disabled", true);
     e.preventDefault();
     let ajaxPromise = null;
     if(!this.followState) {

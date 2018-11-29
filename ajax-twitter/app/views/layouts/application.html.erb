@@ -5,6 +5,8 @@
     <%= csrf_meta_tags %>
 
     <%= stylesheet_link_tag    'application', media: 'all' %>
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Playfair+Display" rel="stylesheet">
     <%= javascript_include_tag 'application' %>
   </head>
 
@@ -25,7 +27,7 @@
         <input type="submit" value="Logout!">
       </form>
     <% end %>
-    
+
     <%= yield %>
   </body>
 </html>
